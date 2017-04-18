@@ -1,0 +1,45 @@
+div.page-header
+    h1 查看问题
+
+div.well.well-lg
+    strong 投票问题是
+    p {{poll.question}}
+
+div(ng-hide="poll.userVoted")
+    p.lead Please select one of the following options:
+
+    form(role="form", ng-submit="vote()")
+        div.radio(ng-repeat="choice in poll.choices")
+            label
+                input(type="radio", name="choice", ng-model="poll.userVote", value="{{choice._id}}")
+                p {{choice.text}}
+        p
+            hr
+
+        div.row
+            div.col-xs-6
+                a.btn.btn-default(href="#/polls", role="button")
+                    span.glyphicon.glyphicon-arrow-left  Back to Poll List
+            div.col-xs-6
+                button.btn.btn-primary.pull-right(type="submit") Vote &raquo;
+
+div(ng-show="poll.userVoted")
+    table.result-table
+        tr(ng-repeat="choice in poll.choices")
+            td {{choice.text}}
+            td
+                table(style="background-color: lightblue; width: {{choice.votes.length/poll.totalVotes*100}}%; text-align: right")
+                    tr
+                        td {{choice.votes.length}}
+
+    p
+        em {{poll.totalVotes}} 人已投票.
+            span(ng-show="poll.userChoice")  你投了选项
+                strong {{poll.userChoice.text}}.
+    p
+        hr
+    p
+        a.btn.btn-default(href="#/polls", role="button")
+            span.glyphicon.glyphicon-arrow-left  Back to Poll List
+
+p &nbsp;

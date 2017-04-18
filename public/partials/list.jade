@@ -1,0 +1,27 @@
+////
+//   Created by weiqiang on 2017/4/12.
+//
+//div.page-header
+//    h1 投票列表
+//
+//div.row
+//    div.col-xs-5
+//        a.btn.btn-default(href="#/new")
+//            span.glyphicon.glyphicon-plus  新建投票
+//
+//    div.col-xs-7
+//        input.form-control(type="text", ng-model="query", placeholder="Search for a poll")
+//
+//div.row
+//    div.col-xs-12
+//        hr
+//div.row(ng-switch='displayType', on="polls.length")
+//    ul(ng-switch-default)
+//        li(ng-repeat="poll in polls | filter:query")
+//            a(href="#/poll/{{poll._id}}") {{poll.question}}
+//    ul(ng-switch-when="0")
+//        li
+//            em No polls in databases. Would you like to
+//                a(href="#/new") create one?
+//p &nbsp;
+just a list;

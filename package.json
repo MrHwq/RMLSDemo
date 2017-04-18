@@ -1,0 +1,24 @@
+{
+    "name": "rmlsdemo",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "postinstall": "bower install",
+        "update-deps": "npm update",
+        "postupdate-deps": "bower update",
+        "prestart": "npm install",
+        "start": "node ./bin/www"
+    },
+    "dependencies": {
+        "body-parser": "~1.17.1",
+        "cookie-parser": "~1.4.3",
+        "debug": "~2.6.3",
+        "express": "~4.15.2",
+        "jade": "~1.11.0",
+        "morgan": "~1.8.1",
+        "serve-favicon": "~2.4.2",
+        "mongoose": "^4.9.4",
+        "socket.io": "~1.7.3",
+        "request": "^2.81.0"
+    }
+}

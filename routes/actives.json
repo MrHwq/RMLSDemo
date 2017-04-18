@@ -1,0 +1,194 @@
+[
+    {
+        "id": 1,
+        "pId": 0,
+        "name": "Composition",
+        "open": true
+    },
+    {
+        "id": 11,
+        "pId": 1,
+        "name": "Super Operator",
+        "input": 1,
+        "output": 2
+    },
+    {
+        "id": 2,
+        "pId": 0,
+        "name": "General Operators",
+        "open": true
+    },
+    {
+        "id": 21,
+        "pId": 2,
+        "name": "Predict",
+        "open": true
+    },
+    {
+        "id": 211,
+        "pId": 21,
+        "name": "Apply Model",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 22,
+        "pId": 2,
+        "name": "Performance"
+    },
+    {
+        "id": 221,
+        "pId": 22,
+        "name": "Compare Performance",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 222,
+        "pId": 22,
+        "name": "Compare ROC",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 223,
+        "pId": 22,
+        "name": "Performance Classification",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 224,
+        "pId": 22,
+        "name": "Performance Cluster",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 225,
+        "pId": 22,
+        "name": "Performance Regression",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 226,
+        "pId": 22,
+        "name": "Performance ROC",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 23,
+        "pId": 2,
+        "name": "Import"
+    },
+    {
+        "id": 231,
+        "pId": 23,
+        "name": "Read CSV",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 232,
+        "pId": 23,
+        "name": "Read Database",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 233,
+        "pId": 23,
+        "name": "Read Excel",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 234,
+        "pId": 23,
+        "name": "Read Hive",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 235,
+        "pId": 23,
+        "name": "Read Model",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 236,
+        "pId": 23,
+        "name": "Performance ROC",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 24,
+        "pId": 2,
+        "name": "Export"
+    },
+    {
+        "id": 241,
+        "pId": 24,
+        "name": "Export Attributes Name",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 242,
+        "pId": 24,
+        "name": "Persist Hive",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 243,
+        "pId": 24,
+        "name": "Persist Model",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 244,
+        "pId": 24,
+        "name": "Write CSV",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 25,
+        "pId": 2,
+        "name": "Transfer"
+    },
+    {
+        "id": 251,
+        "pId": 25,
+        "name": "Aggregate",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 252,
+        "pId": 25,
+        "name": "ANOVA",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 253,
+        "pId": 25,
+        "name": "Discretize By Binning",
+        "input": 1,
+        "output": 1
+    },
+    {
+        "id": 254,
+        "pId": 25,
+        "name": "Discretize By Size",
+        "input": 1,
+        "output": 1
+    }
+]

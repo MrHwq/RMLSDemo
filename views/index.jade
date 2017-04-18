@@ -1,0 +1,73 @@
+block content
+    link(rel="stylesheet", href="/stylesheets/jsplumb/jsplumbtoolkit-defaults.css")
+    link(rel="stylesheet", href="/stylesheets/jsplumb/main.css")
+    link(rel="stylesheet", href="/stylesheets/jsplumb/jsplumbtoolkit-demo.css")
+    link(rel="stylesheet", href="/stylesheets/jsplumb/demo.css")
+    link(rel="stylesheet", href="/stylesheets/ztree/demo.css")
+    link(rel="stylesheet", href="/stylesheets/ztree/zTreeStyle.css")
+    link(rel="stylesheet", href="/stylesheets/style.css")
+    body(ng-app="workFlowModule", ng-controller="ActivesCtrl")
+        div.App__container
+            div.Repository__container
+                div#treeboxbox_tree.ztree
+            div.Canvas__container
+                div#flow-panel.Flow_plumb
+    //nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+    //    div.navbar-header
+    //        a.navbar-brand(href='#/polls') Polls
+    //div.container
+    //    div(ng-view)
+    script(src='//cdn.bootcss.com/angular.js/1.6.4/angular.min.js')
+    script(src='//cdn.bootcss.com/angular.js/1.6.4/angular-resource.min.js')
+    script(src='//cdn.bootcss.com/angular.js/1.6.4/angular-route.min.js')
+    script(src='//cdn.bootcss.com/jquery/3.2.1/jquery.min.js')
+    script(src='//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(src="/javascripts/jsbezier/js/jsbezier.js")
+    <!-- event adapter -->
+    script(src="/javascripts/mottle/js/mottle.js")
+    <!-- geometry functions -->
+    script(src="/javascripts/biltong/src/biltong.js")
+    <!-- drag -->
+    script(src="/javascripts/katavorio/src/katavorio.js")
+    <!-- jsplumb util -->
+    script(src="/javascripts/jsplumb/util.js")
+    script(src="/javascripts/jsplumb/browser-util.js")
+    <!-- main jsplumb engine -->
+    script(src="javascripts/jsplumb/jsplumb.js")
+    <!-- base DOM adapter -->
+    script(src="/javascripts/jsplumb/dom-adapter.js")
+    script(src="/javascripts/jsplumb/overlay-component.js")
+    <!-- endpoint -->
+    script(src="/javascripts/jsplumb/endpoint.js")
+    <!-- connection -->
+    script(src="/javascripts/jsplumb/connection.js")
+    <!-- anchors -->
+    script(src="/javascripts/jsplumb/anchors.js")
+    <!-- connectors, endpoint and overlays  -->
+    script(src="/javascripts/jsplumb/defaults.js")
+    <!-- bezier connectors -->
+    script(src="/javascripts/jsplumb/connectors-bezier.js")
+    <!-- state machine connectors -->
+    script(src="/javascripts/jsplumb/connectors-statemachine.js")
+    <!-- flowchart connectors -->
+    script(src="/javascripts/jsplumb/connectors-flowchart.js")
+    <!-- straight connectors -->
+    script(src="/javascripts/jsplumb/connectors-straight.js")
+    <!-- SVG renderer -->
+    script(src="/javascripts/jsplumb/renderers-svg.js")
+
+    <!-- no library jsPlumb adapter -->
+    script(src="/javascripts/jsplumb/base-library-adapter.js")
+    script(src="/javascripts/jsplumb/dom.jsPlumb.js")
+    <!--  demo code -->
+    //script(src="/javascripts/jsplumb/demo.js")
+    //script(src="/javascripts/jsplumb/demo-list.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/d3/4.8.0/d3.min.js")
+    script(src="/javascripts/treeview/main.js")
+
+    script(src="/javascripts/ztree/jquery-1.4.4.min.js")
+    script(src="/javascripts/ztree/jquery.ztree.core.js")
+    script(src="/javascripts/ztree/jquery.ztree.excheck.js")
+    script(src="/javascripts/ztree/jquery.ztree.exedit.js")
+    script(src="/javascripts/workFlowModule.js")
+    script(src="/javascripts/workFlowService.js")
