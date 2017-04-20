@@ -12,9 +12,21 @@ a {
     display: -ms-flexbox;
     display: flex;
     position: absolute;
-    width: 100%;
+    width: 90%;
     bottom: 55px;
     top: 41px;
+}
+
+.container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: absolute;
+    width: 200px;
+    float: right;
+    bottom: 55px;
+    top: 41px;
+    border: 1px;
 }
 
 .Flow_plumb {
@@ -33,7 +45,7 @@ a {
 
 .Canvas__container {
     margin-top: -0px;
-    width: 100%;
+    width: 80%;
     overflow: hidden;
 }
 

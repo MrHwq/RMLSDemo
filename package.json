@@ -19,6 +19,7 @@
         "serve-favicon": "~2.4.2",
         "mongoose": "^4.9.4",
         "socket.io": "~1.7.3",
-        "request": "^2.81.0"
+        "request": "^2.81.0",
+        "rx": "^4.1.0"
     }
 }

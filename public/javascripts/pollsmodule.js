@@ -11,7 +11,7 @@ angular.module('polls', ['ngRoute', 'pollServices'])
                 templateUrl: 'partials/item.html',
             })
             .when('/new', {
-                templateUrl: 'partials/new.html',
+                templateUrl: 'partials/newaa.html',
             })
             // If invalid routes, just redirect to the main list view
             .otherwise({redirectTo: '/polls'});

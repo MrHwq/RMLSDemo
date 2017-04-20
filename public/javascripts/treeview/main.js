@@ -1,3 +1,5 @@
+var pointColors = {"Hive": "#00f", "Model": "#D4FFD6", "View": "#FF8891"};
+
 function addNode(parentId, nodeId, nodeLabel, position) {
     // var offset = $("#" + parentId).offset();
     //
@@ -49,11 +51,9 @@ function addPorts(instance, node, ports, type) {
     // console.log("node ports " + number_of_ports + ":" + type);
     for (; i < number_of_ports; i++) {
         var anchor = [0, 0, 0, 0];
-        var paintStyle = {radius: 9, fillStyle: '#FF8891'};
         var isSource = false, isTarget = false;
         if (type === 'output') {
             anchor[0] = 1;
-            paintStyle.fillStyle = '#D4FFD6';
             isSource = true;
         } else {
             isTarget = true;
@@ -63,14 +63,26 @@ function addPorts(instance, node, ports, type) {
         y = anchor[1];
         instance.addEndpoint(node, {
             uuid: node.getAttribute("id") + "-" + ports[i],
-            endpoint: ["Dot", {radius: 11}],
-            paintStyle: {fill: isSource ? '#FF8891' : "#00f"},
+            endpoint: ["Dot", {radius: 10}],
+            paintStyle: {fill: pointColors[ports[i]]},
             anchor: anchor,
             maxConnections: -1,
             isSource: isSource,
             isTarget: isTarget,
             connectorStyle: {stroke: "#316b31", strokeWidth: 6},
             connector: ["Bezier", {curviness: 63}],
+            beforeDetach: function (conn) {
+                return confirm("Detach connection?");
+            },
+            onMaxConnections: function (info) {
+                alert("Cannot drop connection " + info.connection.id + " : maxConnections has been reached on Endpoint " + info.endpoint.id);
+            },
+            beforeDrop: function (params) {
+                for (key in params) {
+                    console.log(key + "..." + params[key]);
+                }
+                return confirm("Connect " + params.sourceId + " to " + params.targetId + "?");
+            }
         });
     }
 }
@@ -120,33 +132,33 @@ function onDrop(event, treeId, treeNodes, targetNode, moveType) {
     var uid = new Date().getTime();
     // var node = treeNodes[0];
     // var names = Object.getOwnPropertyNames(node);
-    // console.log(names);
+    // // console.log(names);
     // for (idx in names) {
-    //     console.log(treeNodes[0][names[idx]]);
+    //     console.log(names[idx] + "..." + treeNodes[0][names[idx]]);
     // }
-    var node = addNode('flow-panel', treeNodes[0].tId + uid, treeNodes[0].name, {x: mx, y: my});
+    var node = addNode('flow-panel', "id" + treeNodes[0].id + uid, treeNodes[0].name, {x: mx, y: my});
     if (node) {
         for (idx in zNodes) {
             var activenode = zNodes[idx];
             if (activenode.id == treeNodes[0].id) {
                 // console.log("input ports:::" + activenode.input);
                 // console.log("output ports:::" + activenode.output);
-                if (activenode.input > 0) {
-                    var inputs = new Array();
-                    for (var i = 0; i < activenode.input; ++i) {
-                        inputs.push('in' + i);
-                    }
+                if (activenode.input != undefined) {
+                    // var inputs = new Array();
+                    // for (var i = 0; i < activenode.input; ++i) {
+                    //     inputs.push('in' + i);
+                    // }
                     // for (a in inputs) {
                     //     console.log("inputs has " + a);
                     // }
-                    addPorts(instance, node, inputs, 'input');
+                    addPorts(instance, node, activenode.input, 'input');
                 }
-                if (activenode.output > 0) {
-                    var outputs = new Array();
-                    for (var i = 0; i < activenode.output; ++i) {
-                        outputs.push('out' + i);
-                    }
-                    addPorts(instance, node, outputs, 'output');
+                if (activenode.output != undefined) {
+                    // var outputs = new Array();
+                    // for (var i = 0; i < activenode.output; ++i) {
+                    //     outputs.push('out' + i);
+                    // }
+                    addPorts(instance, node, activenode.output, 'output');
                 }
                 break;
             }
@@ -157,4 +169,28 @@ function onDrop(event, treeId, treeNodes, targetNode, moveType) {
     }
 }
 
+function updateConnections(conn, remove) {
+    if (!remove) {
+        connections.push(conn);
+    } else {
+        var idx = -1;
+        for (var i = 0; i < connections.length; i++) {
+            if (connections[i] == conn) {
+                idx = i;
+                break;
+            }
+        }
+        if (idx != -1) connections.splice(idx, 1);
+    }
+    if (connections.length > 0) {
+        var s = "<span><strong>Connections</strong></span><br/><br/><table><tr><th>Scope</th><th>Source</th><th>Target</th></tr>";
+        for (var j = 0; j < connections.length; j++) {
+            s = s + "<tr><td>" + connections[j].scope + "</td>" + "<td>" + connections[j].sourceId + "</td><td>" + connections[j].targetId + "</td></tr>";
+        }
+        // showConnectionInfo(s);
+        console.log(s);
+    } else {
+        // hideConnectionInfo();
+    }
+}
 
