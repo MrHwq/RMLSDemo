@@ -6,6 +6,5 @@ angular.module('workFlowActionsService', ['ngResource'])
         return $resource('actions/readcsv', {}, {
             //- Use this method for getting a list of polls
             query: {method: 'GET', params: {}, isArray: true}
-
         });
     }]);

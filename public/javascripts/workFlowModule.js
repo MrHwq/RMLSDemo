@@ -62,17 +62,19 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
         $scope.deleteOnDone = true;
         $scope.readcsvpost = {
             csvname: $scope.csvname,
-            hexname: $scope.hexname
+            hexname: $scope.hexname,
+            separator: $scope.separatorval,
+            useSingleQuotes: $scope.useSingleQuotes,
+            deleteOnDone: $scope.deleteOnDone ? 1 : 0
         };
         $scope.parse = function () {
-            readcsvpost = $scope.readcsvpost;
-            var readcsv = new workFlowAction(readcsvpost);
+            var readcsv = new workFlowAction($scope.readcsvpost);
 
             // Call API to save poll to the database
             readcsv.$save(function (p, resp) {
                 if (!p.error) {
                     // If there is no error, redirect to the main view
-                    alert("asdasd");
+                    console.log(resp.message);
                 } else {
                     alert('readcsv post failed');
                 }
