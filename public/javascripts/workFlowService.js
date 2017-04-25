@@ -8,6 +8,6 @@ angular.module('workFlowService', ['ngResource'])
             query: {method: 'GET', params: {activeId: 'actives'}, isArray: true}
 
         });
-    }])
-    .factory('socket', ["$rootScope", function ($rootScope) {
     }]);
+    // .factory('socket', ["$rootScope", function ($rootScope) {
+    // }]);

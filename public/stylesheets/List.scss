@@ -1,0 +1,48 @@
+.listcontainer {
+
+    .listrow {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #c5c5c5;
+        border-radius: 3px;
+        background-color: #fff;
+
+        //> div {
+        //    margin-bottom: 10px;
+        //
+        //    .title {
+        //        color: #313131;
+        //    }
+        //}
+
+        .listrequired {
+            color: #ff0000;
+            margin-right: 3px;
+        }
+
+        .listremove {
+            float: right;
+            cursor: pointer;
+        }
+    }
+
+    .add {
+        display: flex;
+        justify-content: center;
+        border-radius: 3px;
+        background-color: #e0e0e0;
+        padding: 10px 0;
+        cursor: pointer;
+        transition: all .2s linear;
+
+        &:hover {
+            background-color: #ccc;
+        }
+    }
+
+    .disable {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+}

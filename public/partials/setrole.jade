@@ -1,0 +1,27 @@
+//
+   Created by weiqiang on 2017/4/19.
+link(rel="stylesheet", href="/stylesheets/Params.css")
+link(rel="stylesheet", href="/stylesheets/List.css")
+div.paramscontainer
+    div.paramsitem(ng-controller='ActivesSetRole')
+        div.paramstitle
+            span.paramsrequired *
+            span role_settings
+        div.paramscontent
+            div.listrow
+                div.paramsitem
+                    div.paramstitle
+                        span.paramsrequired *
+                        span column
+                    div.paramscontent
+                        div.String__container
+                            input.input(type="text", ng-model="column", placeholder="在此输入")
+                div.paramsitem
+                    div.paramstitle
+                        span.paramsrequired *
+                        span role
+                    div.paramscontent
+                        select(ng-model="role", ng-options="x.name for x in roles")
+            //div.listadd
+        button(ng-click="parse()") Parse
+

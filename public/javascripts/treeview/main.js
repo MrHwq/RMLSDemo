@@ -26,6 +26,9 @@ function addNode(parentId, nodeId, nodeLabel, position) {
         .attr('align', 'center')
         .attr('id', nodeId)
         .classed('node', true)
+        .on('click', function () {
+            alert('asdasd');
+        })
         .text(nodeLabel);
 // .style('background-color', 'gray')
     return jsPlumb.getSelector('#' + nodeId)[0];
@@ -136,7 +139,7 @@ function onDrop(event, treeId, treeNodes, targetNode, moveType) {
     // for (idx in names) {
     //     console.log(names[idx] + "..." + treeNodes[0][names[idx]]);
     // }
-    var node = addNode('flow-panel', "id" + treeNodes[0].id + uid, treeNodes[0].name, {x: mx, y: my});
+    var node = addNode('flow-panel', "id" + treeNodes[0].id + '_' + uid, treeNodes[0].name, {x: mx, y: my});
     if (node) {
         for (idx in zNodes) {
             var activenode = zNodes[idx];

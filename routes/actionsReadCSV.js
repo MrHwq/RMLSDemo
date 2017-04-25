@@ -98,10 +98,8 @@ router.get("/:jobs", function (req, res, next) {
             jobs = result['jobs'][0];
             progress = jobs['progress'];
             progress_msg = jobs['progress_msg'];
-            console.log(jobs);
-            console.log(progress);
-            console.log(progress_msg);
-            res.json({error: false, message: body});
+            // console.log(jobs);
+            res.json({error: false, message: {progress: progress, progress_msg: progress_msg}});
         } else {
             res.json({error: true, "message": "request get jobs failed, " + body});
         }

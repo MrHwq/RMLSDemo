@@ -1,0 +1,20 @@
+//
+   Created by weiqiang on 2017/4/24.
+link(rel="stylesheet", href="/stylesheets/Params.css")
+link(rel="stylesheet", href="/stylesheets/List.css")
+div.paramscontainer
+    div.paramsitem(ng-controller='ActivesSplitByPercent')
+        div.paramstitle
+            span.paramsrequired *
+            span percent {{percent}}
+        div.paramscontent
+            input.input(type="text", ng-model="percent", placeholder="在此输入百分比")
+            //, ng-init="percent=0.5")
+            //div.listadd
+        div.paramstitle
+            span.paramsrequired *
+            span random_seed
+        div.paramscontent
+            input.input(type="number", ng-model="seed", min="1", max="999999" ,placeholder="在此输入随机值")
+            //div.listadd
+    button(ng-click="parse()") Parse
