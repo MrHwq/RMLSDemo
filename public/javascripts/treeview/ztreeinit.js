@@ -72,6 +72,9 @@ var jsplumbinit = function () {
     });
 
     jsPlumb.fire('jsFlowLoaded', instance);
+    // d3.select("#flow-panel").on('click', function () {
+    //     window.location.href = "#/";
+    // })
     // $.fn.zTree.destroy();
     $.fn.zTree.init($('#treeboxbox_tree'), setting, zNodes);
 }

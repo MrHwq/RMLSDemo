@@ -15,6 +15,7 @@ div.paramscontainer
             span.paramsrequired *
             span random_seed
         div.paramscontent
-            input.input(type="number", ng-model="seed", min="1", max="999999" ,placeholder="在此输入随机值")
+            input.input(type="number", ng-model="seed", min="1", max="999999", placeholder="在此输入随机值")
             //div.listadd
-    button(ng-click="parse()") Parse
+    button(ng-click="save()") 保存
+    button(ng-click="run()") 偷偷试运行

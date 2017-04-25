@@ -1,0 +1,69 @@
+//
+   Created by weiqiang on 2017/4/19.
+div(ng-controller='ActivesSVM')
+    table
+        tbody
+            tr
+                th model_id
+                td
+                    input.form-control(type="text", ng-model="modelid", placeholder="输入modelid")
+            tr
+                th training_frame:
+                td
+                    input.form-control(type="text", ng-model="trainingframe", placeholder="输入hex名")
+            tr
+                th nfolds
+                td
+                    input.form-control(type="text", ng-model="nfolds", placeholder="输入nfolds")
+                    //select(ng-model="nfolds", ng-options="x for x in separators")
+            tr
+                th ignore_const_cols
+                td
+                    input.form-control(type='checkbox', ng-model="ignoreconstcols", placeholder="输入ignore_const_cols")
+                    //div(ng-repeat="x in hasHeaders")
+                    //    label
+                    //        input(type="radio", name="hasHeader", ng-model="headername", value="{{x.name}}")
+                    //        span {{x.value}}
+            tr
+                th add_intercept
+                td
+                    input.form-control(type='checkbox', ng-model="add_intercept", placeholder="输入add_intercept")
+            tr
+                th step_size:
+                td
+                    input.form-control(type="text", ng-model="stepsize", placeholder="输入")
+            tr
+                th reg_param:
+                td
+                    input.form-control(type="text", ng-model="regparam", placeholder="输入")
+            tr
+                th convergence_tol:
+                td
+                    input.form-control(type="text", ng-model="convergencetol", placeholder="输入")
+            tr
+                th mini_batch_fraction:
+                td
+                    input.form-control(type="text", ng-model="minibatchfraction", placeholder="输入")
+            tr
+                th threshold:
+                td
+                    input.form-control(type="text", ng-model="threshold", placeholder="输入")
+            tr
+                th updater*
+                td
+                    select(ng-model="updater", ng-options="x for x in updaters")
+            tr
+                th gradient*
+                td
+                    select(ng-model="gradient", ng-options="x for x in gradients")
+            tr
+                th missing_values_handling*
+                td
+                    select(ng-model="missingvalueshandling", ng-options="x for x in missingvalueshandlings")
+    button(ng-click="save()") 保存
+    button(ng-click="run()") 偷偷试运行
+    table
+        tbody
+            tr(ng-repeat="x in column_names")
+                th {{column_names[$index]}}
+                td {{column_types[$index]}}

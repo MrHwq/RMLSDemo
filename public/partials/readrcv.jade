@@ -33,4 +33,10 @@ div(ng-controller='ActivesReadCSV')
                         label
                             input(type="checkbox", ng-model="deleteOnDone")
                             span Delete on done
-    button(ng-click="parse()") Parse
+    button(ng-click="save()") 保存
+    button(ng-click="run()") 偷偷试运行
+    table
+        tbody
+            tr(ng-repeat="x in column_names")
+                th {{column_names[$index]}}
+                td {{column_types[$index]}}

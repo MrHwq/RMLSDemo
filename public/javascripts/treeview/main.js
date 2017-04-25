@@ -26,8 +26,15 @@ function addNode(parentId, nodeId, nodeLabel, position) {
         .attr('align', 'center')
         .attr('id', nodeId)
         .classed('node', true)
-        .on('click', function () {
-            alert('asdasd');
+        .on('dblclick', function () {
+            console.log("#/workFlow" + nodeLabel.replace(/\s/g, ""));
+            curPath = window.location.href;
+            newPath = "#/workFlow" + nodeLabel.replace(/\s/g, "");
+            if (curPath.indexOf(newPath) >= 0) {
+                window.location.href = '#/';
+            } else {
+                window.location.href = newPath;
+            }
         })
         .text(nodeLabel);
 // .style('background-color', 'gray')
@@ -140,34 +147,20 @@ function onDrop(event, treeId, treeNodes, targetNode, moveType) {
     //     console.log(names[idx] + "..." + treeNodes[0][names[idx]]);
     // }
     var node = addNode('flow-panel', "id" + treeNodes[0].id + '_' + uid, treeNodes[0].name, {x: mx, y: my});
+    console.log(treeNodes[0].name);
     if (node) {
         for (idx in zNodes) {
             var activenode = zNodes[idx];
             if (activenode.id == treeNodes[0].id) {
-                // console.log("input ports:::" + activenode.input);
-                // console.log("output ports:::" + activenode.output);
                 if (activenode.input != undefined) {
-                    // var inputs = new Array();
-                    // for (var i = 0; i < activenode.input; ++i) {
-                    //     inputs.push('in' + i);
-                    // }
-                    // for (a in inputs) {
-                    //     console.log("inputs has " + a);
-                    // }
                     addPorts(instance, node, activenode.input, 'input');
                 }
                 if (activenode.output != undefined) {
-                    // var outputs = new Array();
-                    // for (var i = 0; i < activenode.output; ++i) {
-                    //     outputs.push('out' + i);
-                    // }
                     addPorts(instance, node, activenode.output, 'output');
                 }
                 break;
             }
         }
-        // addPorts(instance, node, ['out'], 'output');
-        // addPorts(instance, node, ['in1', 'in2'], 'input');
         instance.draggable($(node));
     }
 }

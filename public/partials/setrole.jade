@@ -6,22 +6,15 @@ div.paramscontainer
     div.paramsitem(ng-controller='ActivesSetRole')
         div.paramstitle
             span.paramsrequired *
-            span role_settings
+            span 指定属性列角色，选择要使用的列作为独立变量（目标列）
         div.paramscontent
-            div.listrow
-                div.paramsitem
-                    div.paramstitle
-                        span.paramsrequired *
-                        span column
-                    div.paramscontent
-                        div.String__container
-                            input.input(type="text", ng-model="column", placeholder="在此输入")
-                div.paramsitem
-                    div.paramstitle
-                        span.paramsrequired *
-                        span role
-                    div.paramscontent
-                        select(ng-model="role", ng-options="x.name for x in roles")
+            div.paramsitem
+                div.paramstitle
+                    span.paramsrequired *
+                    span response_column
+                div.paramscontent
+                    select(ng-model="response_column", ng-options="x for x in column_names")
             //div.listadd
-        button(ng-click="parse()") Parse
+        button(ng-click="save()") 保存
+        button(ng-click="run()") 偷偷试运行
 

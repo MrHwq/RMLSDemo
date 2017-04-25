@@ -61,8 +61,7 @@ function parseSetup(params, res) {
     var formData = {
         'source_frames': '["' + bodyJson['destination_frames'] + '"]'
     };
-    console.log("continue to parseSetup " + parseSetupUrl);
-    console.log(formData);
+    console.log("continue to parseSetup " + parseSetupUrl + formData.source_frames);
     request.post({
             url: parseSetupUrl,
             form: formData
