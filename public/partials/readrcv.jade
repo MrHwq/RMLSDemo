@@ -35,6 +35,7 @@ div(ng-controller='ActivesReadCSV')
                             span Delete on done
     button(ng-click="save()") 保存
     button(ng-click="run()") 偷偷试运行
+    p(ng-show="iserror") {{errormsg}}
     table
         tbody
             tr(ng-repeat="x in column_names")

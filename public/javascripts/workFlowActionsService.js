@@ -7,13 +7,23 @@ angular.module('workFlowActionsService', ['ngResource'])
             query: {method: 'GET', params: {csvname: 'csvname'}, isArray: true}
         });
     }])
-    .factory('workFlowActionReadCSV', ["$resource", function ($resource) {
+    .factory('ReadCSV', ["$resource", function ($resource) {
         return $resource('actions/readcsv', {}, {
             query: {method: 'GET', params: {}, isArray: true}
         });
     }])
-    .factory('workFlowActionSplitByPercent', ["$resource", function ($resource) {
+    .factory('SplitByPercent', ["$resource", function ($resource) {
         return $resource('actions/splitdatabypercent', {}, {
+            query: {method: 'GET', params: {}, isArray: true}
+        });
+    }])
+    .factory('SVM', ["$resource", function ($resource) {
+        return $resource('actions/svm', {}, {
+            query: {method: 'GET', params: {}, isArray: true}
+        });
+    }])
+    .factory('ApplyModel', ["$resource", function ($resource) {
+        return $resource('actions/applymodel', {}, {
             query: {method: 'GET', params: {}, isArray: true}
         });
     }]);

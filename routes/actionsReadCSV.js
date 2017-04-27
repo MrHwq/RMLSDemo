@@ -4,37 +4,29 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var ImportFiles = require('./watertype/ImportFilesV3');
+var ParseV3 = require('./watertype/ParseV3');
+var ParseSetupV3 = require('./watertype/ParseSetupV3');
+var H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
 // var Rx = require('rx');
 // const rxJs = new Rx.Subject();
 
 mainurl = 'http://172.21.127.123:54323';
-function parse(params, res) {
+function parseFunc(parseSetup, res) {
     var parseUrl = mainurl + '/3/Parse';
-    var bodyJson = JSON.parse(params);
     var formdata = {
-        'destination_frame': bodyJson['destination_frame'],
-        'source_frames': '["' + bodyJson['source_frames'][0]['name'] + '"]',
-        'parse_type': bodyJson['parse_type'],
-        'separator': bodyJson['separator'],
-        'number_columns': bodyJson['number_columns'],
-        'single_quotes': bodyJson['single_quotes'],
-        'column_names': '',
-        'column_types': '',
-        'check_header': bodyJson['check_header'],
-        'delete_on_done': true,
-        'chunk_size': bodyJson['chunk_size']
+        'destination_frame': parseSetup.getDstFrame(),
+        'source_frames': '["' + parseSetup.getSrcFramesName() + '"]',
+        'parse_type': parseSetup.getParseType(),
+        'separator': parseSetup.getSeparator(),
+        'number_columns': parseSetup.getNumberColumns(),
+        'single_quotes': parseSetup.getSingleQuotes(),
+        'column_names': JSON.stringify(parseSetup.getColumnNames()),
+        'column_types': JSON.stringify(parseSetup.getColumnTypes()),
+        'check_header': parseSetup.getCheckHeader(),
+        'delete_on_done': parseSetup.getDelOnDone(),
+        'chunk_size': parseSetup.getChunkSize()
     };
-    formdata['column_names'] += '[';
-    for (key in bodyJson['column_names']) {
-        formdata['column_names'] += '"' + bodyJson['column_names'][key] + '",';
-    }
-    formdata['column_names'] += ']';
-
-    formdata['column_types'] += '[';
-    for (key in bodyJson['column_types']) {
-        formdata['column_types'] += '"' + bodyJson['column_types'][key] + '",';
-    }
-    formdata['column_types'] += ']';
     console.log("continue to parse " + parseUrl);
     request.post({
             url: parseUrl,
@@ -42,24 +34,22 @@ function parse(params, res) {
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                parseResult = JSON.parse(body);
-                job = parseResult['job'];
-                jobkey = job['key'];
-                jobname = jobkey['name'];
-                res.json({error: false, message: jobname});
+                parseRet = new ParseV3(JSON.parse(body));
+                res.json({error: false, message: parseRet.getJob().getJobName()});
+            } else if (body != undefined) {
+                h2oerror = new H2OErrorV3(JSON.parse(body));
+                res.json({error: true, "message": "request parse failed, " + h2oerror.getMsg()});
             } else {
-                console.log(body);
-                res.json({error: true, "message": "request parse setup failed, " + body});
+                res.json({error: true, "message": "request parse failed, " + response});
             }
         }
     );
 }
 
-function parseSetup(params, res) {
-    var bodyJson = JSON.parse(params);
+function parseSetup(importFiles, res) {
     var parseSetupUrl = mainurl + '/3/ParseSetup';
     var formData = {
-        'source_frames': '["' + bodyJson['destination_frames'] + '"]'
+        'source_frames': JSON.stringify(importFiles.getDstFrames())
     };
     console.log("continue to parseSetup " + parseSetupUrl + formData.source_frames);
     request.post({
@@ -68,9 +58,13 @@ function parseSetup(params, res) {
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                parse(body, res);
+                parseresult = new ParseSetupV3(JSON.parse(body));
+                parseFunc(parseresult, res);
+            } else if (body != undefined) {
+                h2oerror = new H2OErrorV3(JSON.parse(body));
+                res.json({error: true, "message": "parse setup failed, " + h2oerror.getMsg()});
             } else {
-                res.json({error: true, "message": "request parseSetup setup failed, " + body});
+                res.json({error: true, "message": "parse setup failed, " + response});
             }
         }
     );
@@ -82,25 +76,13 @@ router.post("/", function (req, res, next) {
     console.log("continue to import file " + importFilesUrl);
     request(importFilesUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            parseSetup(body, res);
+            importFiles = new ImportFiles(JSON.parse(body));
+            parseSetup(importFiles, res);
+        } else if (body != undefined) {
+            h2oerror = new H2OErrorV3(JSON.parse(body));
+            res.json({error: true, "message": "request import file failed, " + h2oerror.getMsg()});
         } else {
-            res.json({error: true, "message": "request import file failed, " + body});
-        }
-    });
-});
-
-router.get("/:jobs", function (req, res, next) {
-    var jobsUrl = mainurl + "/3/Jobs/" + req.params.jobs;
-    request(jobsUrl, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            result = JSON.parse(body);
-            jobs = result['jobs'][0];
-            progress = jobs['progress'];
-            progress_msg = jobs['progress_msg'];
-            // console.log(jobs);
-            res.json({error: false, message: {progress: progress, progress_msg: progress_msg}});
-        } else {
-            res.json({error: true, "message": "request get jobs failed, " + body});
+            res.json({error: true, "message": "request import file failed, " + response});
         }
     });
 });

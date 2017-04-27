@@ -10,7 +10,7 @@ div(ng-controller='ActivesSVM')
             tr
                 th training_frame:
                 td
-                    input.form-control(type="text", ng-model="trainingframe", placeholder="输入hex名")
+                    input.form-control(type="text", ng-model="hexname", disabled="disabled", placeholder="输入hex名")
             tr
                 th nfolds
                 td
@@ -62,8 +62,10 @@ div(ng-controller='ActivesSVM')
                     select(ng-model="missingvalueshandling", ng-options="x for x in missingvalueshandlings")
     button(ng-click="save()") 保存
     button(ng-click="run()") 偷偷试运行
-    table
-        tbody
-            tr(ng-repeat="x in column_names")
-                th {{column_names[$index]}}
-                td {{column_types[$index]}}
+    //table
+    //    tbody
+    //        tr(ng-repeat="x in column_names")
+    //            th
+    //                input(type="checkbox", name='ignored_columns', ng-model="ignored_columns.{{column_names[$index]}}")
+    //            td {{column_names[$index]}}
+    //            td {{column_types[$index]}}

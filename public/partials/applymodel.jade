@@ -1,0 +1,17 @@
+//
+   Created by weiqiang on 2017/4/24.
+link(rel="stylesheet", href="/stylesheets/Params.css")
+link(rel="stylesheet", href="/stylesheets/List.css")
+div.paramscontainer
+    div.paramsitem(ng-controller='ActivesApplyModel')
+        div.paramstitle
+            span.paramsrequired *
+            span model_id
+        div.paramscontent
+            input.input(type="text", ng-model="modelid", disabled="disabled", placeholder="连接model")
+        div.paramstitle
+            span.paramsrequired *
+            span data_in
+        div.paramscontent
+            input.input(type="text", ng-model="datain", disabled="disabled", placeholder="连接测试数据集")
+    button(ng-click="run()") 偷偷试运行

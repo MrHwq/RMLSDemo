@@ -32,6 +32,10 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 templateUrl: 'partials/svm.html',
                 controller: 'ActivesSVM'
             })
+            .when('/workFlowApplyModel', {
+                templateUrl: 'partials/applymodel.html',
+                controller: 'ActivesApplyModel'
+            })
             // If invalid routes, just redirect to the main list view
             .otherwise({redirectTo: '/'});
     }])
@@ -69,12 +73,12 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
         });
         console.log('showaction  ' + $scope.showaction);
     }])
-    .controller('ActivesReadCSV', ['$scope', '$rootScope', 'workFlowActive', 'ParseFile', 'workFlowActionReadCSV',
-        function ($scope, $rootScope, workFlowActive, ParseFile, workFlowActionReadCSV) {
+    .controller('ActivesReadCSV', ['$scope', '$rootScope', 'ParseFile', 'ReadCSV',
+        function ($scope, $rootScope, ParseFile, ReadCSV) {
             $scope.$parent.showaction = true;
             $scope.$watch('csvname', function (newValue, oldValue, scope) {
                 if (newValue.indexOf(".csv") >= 0) {
-                    if (newValue == $scope.csvname && $scope.hexname != undefined) {
+                    if (newValue == oldValue && $scope.hexname != undefined) {
                         console.log("the same csvname," + $scope.csvname + "..." + $scope.hexname);
                         return;
                     }
@@ -84,28 +88,32 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                         if (!resp.error) {
                             $scope.column_names = resp.message['column_names'];
                             $scope.column_types = resp.message['column_types'];
-                            $rootScope.column_names = resp.message['column_names'];
-                            $rootScope.column_types = resp.message['column_names'];
+                            $scope.iserror = false;
+                        } else {
+                            $scope.column_names = undefined;
+                            $scope.column_types = undefined;
+                            $scope.iserror = true;
+                            $scope.errormsg = resp.message;
                         }
                     });
                 } else {
                     $scope.column_names = undefined;
                     $scope.column_types = undefined;
                     $scope.hexname = undefined;
+                    $scope.iserror = false;
                 }
             });
             $scope.separators = [",: '44'"];
-            $scope.hasHeaders = [
-                {
-                    "name": "auto",
-                    "value": "Auto"
-                }, {
-                    "name": "header",
-                    "value": "First row contains column names"
-                }, {
-                    "name": "data",
-                    "value": "First row contains data"
-                }];
+            $scope.hasHeaders = [{
+                "name": "auto",
+                "value": "Auto"
+            }, {
+                "name": "header",
+                "value": "First row contains column names"
+            }, {
+                "name": "data",
+                "value": "First row contains data"
+            }];
             if ($scope.readcsv != undefined) {
                 console.log('restore readcsv data');
                 $scope.csvname = $rootScope.readcsv.csvname;
@@ -115,13 +123,16 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $scope.useSingleQuotes = $rootScope.readcsv.useSingleQuotes;
                 $scope.deleteOnDone = $rootScope.readcsv.deleteOnDone;
             } else {
-                $scope.csvname = "/root/hwq/data/rfid_train20170223.csv";
+                $scope.csvname = "/root/hwq/data/czc.csv";
                 $scope.separatorval = ",: '44'";
                 $scope.headername = "header";
                 $scope.useSingleQuotes = false;
                 $scope.deleteOnDone = true;
             }
             $scope.save = function () {
+                $rootScope.column_names = $scope.column_names;
+                $rootScope.column_types = $scope.column_types;
+                $rootScope.column_types[26] = 'Enum';
                 $rootScope.readcsv = {};
                 $rootScope.readcsv.csvname = $scope.csvname;
                 $rootScope.readcsv.hexname = $scope.hexname;
@@ -129,10 +140,6 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $rootScope.readcsv.headername = $scope.headername;
                 $rootScope.readcsv.useSingleQuotes = $scope.useSingleQuotes;
                 $rootScope.readcsv.deleteOnDone = $scope.deleteOnDone;
-                for (key in $rootScope.readcsv) {
-                    console.log(key + "..." + $rootScope.readcsv[key]);
-                }
-                console.log($rootScope.readcsv);
             }
             $scope.run = function () {
                 readcsvpost = {
@@ -142,31 +149,23 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     useSingleQuotes: $scope.useSingleQuotes,
                     deleteOnDone: $scope.deleteOnDone ? 1 : 0
                 }
-                var readcsv = new workFlowActionReadCSV(readcsvpost);
-                readcsv.$save(function (p, resp) {
-                    if (!p.error) {
-                        if (!resp.error) {
-                            for (key in resp) {
-                                console.log(key + ";;;" + resp[key]);
-                            }
-                            alert('message::' + resp['message']);
-                        } else {
-                            alert('readcsv post failed, ' + resp.message);
-                        }
+                var readcsv = new ReadCSV(readcsvpost);
+                readcsv.$save(function (resp) {
+                    console.log(resp);
+                    if (!resp.error) {
+                        alert('message::' + resp['message']);
                     } else {
-                        alert('readcsv post failed');
+                        alert('readcsv post failed, error msg:' + resp.message);
                     }
+                }, function (fail) {
+                    alert('readcsv post failed, ' + fail);
                 });
             }
         }])
-    .controller('ActivesSetRole', ['$scope', '$rootScope', 'workFlowActive', 'workFlowActionReadCSV',
-        function ($scope, $rootScope, workFlowActive, workFlowActionReadCSV) {
+    .controller('ActivesSetRole', ['$scope', '$rootScope', 'ReadCSV',
+        function ($scope, $rootScope, ReadCSV) {
             $scope.$parent.showaction = true;
             $scope.column_names = $rootScope.column_names;
-            // $scope.roles = [{
-            //     "name": "LABEL",
-            //     "value": "LABEL"
-            // }];
             if ($rootScope.setrole != undefined) {
                 console.log('restore set role ' + $rootScope.setrole.response_column);
                 $scope.response_column = $rootScope.setrole.response_column;
@@ -183,8 +182,8 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $rootScope.response_column = $scope.response_column;
             }
         }])
-    .controller('ActivesSplitByPercent', ['$scope', '$rootScope', 'workFlowActive', 'workFlowActionSplitByPercent',
-        function ($scope, $rootScope, workFlowActive, workFlowActionSplitByPercent) {
+    .controller('ActivesSplitByPercent', ['$scope', '$rootScope', 'SplitByPercent',
+        function ($scope, $rootScope, SplitByPercent) {
             console.log('===========================root:' + $rootScope.percent + ",scope:" + $scope.percent);
             $scope.$parent.showaction = true;
             // $scope.percent = ($rootScope.percent == undefined) ? 0.5 : $rootScope.percent;
@@ -205,44 +204,50 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $rootScope.splitdatabypercent = {};
                 $rootScope.splitdatabypercent.percent = $scope.percent;
                 $rootScope.splitdatabypercent.seed = $scope.seed;
+                hexname = ($rootScope.hexname == undefined ? 'czc.hex' : $rootScope.hexname)
+                $rootScope.splitdatabypercent.frame1 = hexname + '_' + $scope.percent;
+                $rootScope.splitdatabypercent.frame2 = hexname + '_' + (1 - $scope.percent);
+                if ($scope.percent == 0.5) {
+                    $rootScope.splitdatabypercent.frame2 += '.1';
+                }
             }
             $scope.run = function () {
                 console.log('run ' + $scope.percent);
-                hex = $rootScope.readcsv.hexname;
-                // hexname = $rootScope.hexname == undefined ? 'rfid_train20170223.hex' : $rootScope.hexname;
-                // percentinfo = {
-                //     hexname: hexname,
-                //     percentrate: [$rootScope.percent],
-                //     frame: [hexname + '_' + $rootScope.percent, hexname + '_' + (1 - $rootScope.percent) + "1"],
-                //     seed: $rootScope.seed
-                // }
-                // console.log(percentinfo);
-                // var percentinfo = new workFlowActionSplitByPercent(percentinfo);
-                // percentinfo.$save(function (p, resp) {
-                //     if (!p.error) {
-                //         if (!resp.error) {
-                //             for (key in resp) {
-                //                 console.log(key + ";;;" + resp[key]);
-                //             }
-                //             alert('message::' + resp['message']);
-                //         } else {
-                //             alert('splitbydata post failed, ' + resp.message);
-                //         }
-                //     } else {
-                //         alert('splitbydata post failed');
-                //     }
-                // });
+                hexname = ($rootScope.hexname == undefined ? 'czc.hex' : $rootScope.hexname);
+                frame1 = hexname + '_' + $scope.percent;
+                frame2 = hexname + '_' + (1 - $scope.percent);
+                if ($scope.percent == 0.5) {
+                    frame2 += '.1';
+                }
+                percentinfo = {
+                    hexname: hexname,
+                    percentrate: [$scope.percent],
+                    frame: [frame1, frame2],
+                    seed: $scope.seed
+                }
+                console.log(percentinfo);
+                var percentinfo = new SplitByPercent(percentinfo);
+                percentinfo.$save(function (resp) {
+                    if (!resp.error) {
+                        message = resp['message'];
+                        for (key in message) {
+                            console.log(message[key]);
+                        }
+                    } else {
+                        alert('splitbydata post failed, ' + resp.message);
+                    }
+                });
             }
         }])
-    .controller('ActivesSVM', ['$scope', '$rootScope', 'workFlowActive', 'workFlowActionReadCSV',
-        function ($scope, $rootScope, workFlowActive, workFlowActionReadCSV) {
+    .controller('ActivesSVM', ['$scope', '$rootScope', 'SVM',
+        function ($scope, $rootScope, SVM) {
             $scope.$parent.showaction = true;
             $scope.updaters = ["L2", "L1", "Simple"];
             $scope.gradients = ["Hinge", "Leastsquares", "Logistic"];
             $scope.missingvalueshandlings = ["NotAllowed", "Skip", "MeanImputation"];
             if ($rootScope.readcsv != undefined) {
                 readcsv = $rootScope.readcsv;
-                $scope.trainingframe = readcsv['hexname'];
+                $scope.hexname = readcsv['hexname'];
             }
             if ($rootScope.svm != undefined) {
                 $scope.modelid = $rootScope.svm.modelid;
@@ -258,8 +263,9 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $scope.gradient = $rootScope.svm.gradient;
                 $scope.missingvalueshandling = $rootScope.svm.missingvalueshandling;
             } else {
-                $scope.modelid = 'SVM_' + Math.floor(Math.random() * 1000) + '_' + Math.floor(Math.random() * 1000)
-                    + Math.floor(Math.random() * 1000);
+                $scope.modelid = 'SVM_' + Math.floor(Math.random() * 100000)
+                    + '_' + Math.floor(Math.random() * 100000)
+                    + '_' + Math.floor(Math.random() * 100000);
                 $scope.nfolds = 0;
                 $scope.ignoreconstcols = true;
                 $scope.addintercept = false;
@@ -275,8 +281,14 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
 
             $scope.column_names = $rootScope.column_names;
             $scope.column_types = $rootScope.column_types;
+            $scope.ignored_columns = {};
+            $scope.$watch('ignored_columns', function (newValue, oldValue, scope) {
+                console.log($scope.ignored_columns);
+            })
             $scope.save = function () {
                 console.log('save svm ');
+                // console.log($scope.ignored_columns);
+                $rootScope.svm = {};
                 $rootScope.svm.modelid = $scope.modelid;
                 // $rootScope.svm.hexname = $scope.hexname;
                 $rootScope.svm.nfolds = $scope.nfolds;
@@ -290,5 +302,61 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $rootScope.svm.updater = $scope.updater;
                 $rootScope.svm.gradient = $scope.gradient;
                 $rootScope.svm.missingvalueshandling = $scope.missingvalueshandling;
+            }
+            if ($rootScope.setrole == undefined) {
+                $rootScope.setrole = {};
+                $rootScope.setrole.response_column = 'churn';
+            }
+            $scope.run = function () {
+                svminfo = {
+                    'model_id': $scope.modelid,
+                    'hexname': $scope.hexname,
+                    'response_column': $rootScope.setrole.response_column,
+                    'nfolds': $scope.nfolds,
+                    'ignore_const_cols': $scope.ignoreconstcols,
+                    'add_intercept': $scope.addintercept,
+                    'step_size': $scope.stepsize,
+                    'reg_param': $scope.regparam,
+                    'convergence_tol': $scope.convergencetol,
+                    'mini_batch_fraction': $scope.minibatchfraction,
+                    'threshold': $scope.threshold,
+                    'updater': $scope.updater,
+                    'gradient': $scope.gradient,
+                    'missing_values_handling': $scope.missingvalueshandling
+                }
+                console.log(svminfo);
+                var svm = new SVM(svminfo);
+                svm.$save(function (resp) {
+                    if (!resp.error) {
+                        console.log(resp.message);
+                    } else {
+                        console.log('error ' + resp.message)
+                    }
+                });
+            }
+        }])
+    .controller('ActivesApplyModel', ['$scope', '$rootScope', 'ApplyModel',
+        function ($scope, $rootScope, ApplyModel) {
+            "use strict";
+            if ($rootScope.svm != undefined) {
+                $scope.modelid = $rootScope.svm.modelid;
+            } else {
+            }
+            if ($rootScope.splitdatabypercent != undefined) {
+                $scope.datain = $rootScope.splitdatabypercent.frame1;
+            } else {
+                $scope.datain = 'czc.hex_0.75';
+            }
+            $scope.run = function () {
+                var modelinfo = {modelid: $scope.modelid, datain: $scope.datain};
+                console.log(modelinfo);
+                var apply = new ApplyModel(modelinfo);
+                apply.$save(function (resp) {
+                    if (!resp.error) {
+                        console.log(resp.message);
+                    } else {
+                        console.log('error ' + resp.message)
+                    }
+                });
             }
         }]);
