@@ -1,9 +1,9 @@
 /**
  * Created by weiqiang on 2017/4/18.
  */
-var express = require('express');
-var router = express.Router();
-var activeconfig = require('./actives.json');
+let express = require('express');
+let router = express.Router();
+let activeconfig = require('./actives.json');
 
 // var zNodes = [
 //     {id: 1, pId: 0, name: "Composition", open: true},
@@ -42,11 +42,11 @@ router.get("/actives", function (req, res, next) {
 });
 
 router.get("/:id", function (req, res, next) {
-    var activeId = req.params.id;
+    let activeId = req.params.id;
     console.log(req.params);
-    var flag = false;
+    let flag = false;
     for (idx in activeconfig) {
-        var activenode = activeconfig[idx];
+        let activenode = activeconfig[idx];
         if (activenode.id == activeId) {
             res.json(activenode);
             flag = true;

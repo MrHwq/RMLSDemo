@@ -1,15 +1,15 @@
 /**
  * Created by weiqiang on 2017/4/19.
  */
-var express = require('express');
-var router = express.Router();
-var parsefile = require('./actionsParseFile');
-var readcsv = require('./actionsReadCSV');
-var jobs = require('./actionsJobs');
-var setrole = require('./actionsSetRole');
-var splitdatabypercent = require('./actionsSplitDataByPercent');
-var svm = require('./actionsSVM');
-var applymodel = require('./actionsApplyModel');
+let express = require('express');
+let router = express.Router();
+let parsefile = require('./actionsParseFile');
+let readcsv = require('./actionsReadCSV');
+let jobs = require('./actionsJobs');
+let setrole = require('./actionsSetRole');
+let splitdatabypercent = require('./actionsSplitDataByPercent');
+let svm = require('./actionsSVM');
+let applymodel = require('./actionsApplyModel');
 
 router.use('/parsefile', parsefile);
 router.use('/readcsv', readcsv);

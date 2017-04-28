@@ -59,7 +59,7 @@
  *       {__meta:{schema_version:3,schema_name:ModelParameterSchemaV3,schema_type:Iced},name:ignore_const_cols,label:ignore_const_cols,help:Ignore constant columns.,required:false,type:boolean,default_value:true,actual_value:true,level:critical,values:[],is_member_of_frames:[],is_mutually_exclusive_with:[],gridable:false},
  *       {__meta:{schema_version:3,schema_name:ModelParameterSchemaV3,schema_type:Iced},name:missing_values_handling,label:missing_values_handling,help:Handling of missing values. Either NotAllowed, Skip or MeanImputation.,required:false,type:enum,default_value:MeanImputation,actual_value:MeanImputation,level:expert,values:[NotAllowed,Skip,MeanImputation],is_member_of_frames:[],is_mutually_exclusive_with:[],gridable:true}]}
  */
-var JobV3 = require('./JobV3')
+let JobV3 = require('./JobV3')
 class SVMV3 {
     constructor(svm) {
         this.job = new JobV3(svm.job);

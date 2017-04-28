@@ -12,9 +12,9 @@ block content
                 div#treeboxbox_tree.ztree
             div.TabControl__item.TabControl__active
                 div#flow-panel.Flow_plumb
-        div.OperatorInfo__container(ng-show="showaction")
-            div(ng-view)
-
+        //div.OperatorInfo__container
+        div.OperatorInfo__container(ng-view, ng-show="showaction")
+    //()
     //nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
     //    div.navbar-header
     //        a.navbar-brand(href='#/polls') Polls
@@ -73,6 +73,10 @@ block content
     script(src="/javascripts/ztree/jquery.ztree.core.js")
     script(src="/javascripts/ztree/jquery.ztree.excheck.js")
     script(src="/javascripts/ztree/jquery.ztree.exedit.js")
+
+    script(src="/javascripts/flotr2/flotr2.min.js")
+    script(src="/javascripts/flotr2/flotr2.main.js")
+
     script(src="/javascripts/workFlowModule.js")
     script(src="/javascripts/workFlowService.js")
     script(src="/javascripts/workFlowActionsService.js")

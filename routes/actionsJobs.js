@@ -1,14 +1,14 @@
 /**
  * Created by weiqiang on 2017/4/26.
  */
-var express = require('express');
-var router = express.Router();
-var request = require('request');
-var H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
+let express = require('express');
+let router = express.Router();
+let request = require('request');
+let H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
 
 mainurl = 'http://172.21.127.123:54323';
 router.get("/:jobs", function (req, res, next) {
-    var jobsUrl = mainurl + "/3/Jobs/" + req.params.jobs;
+    let jobsUrl = mainurl + "/3/Jobs/" + req.params.jobs;
     request(jobsUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             result = JSON.parse(body);

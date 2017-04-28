@@ -9,7 +9,7 @@
  */
 class ModelKeyV3 {
     constructor(model) {
-        var meta = model.__meta;
+        let meta = model.__meta;
         if (meta.schema_name != 'ModelKeyV3') {
             console.error(model);
         }

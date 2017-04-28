@@ -2,11 +2,11 @@
  * Created by weiqiang on 2017/4/21.
  */
 
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
 router.get("/:rolename", function (req, res, next) {
-    var rolename = req.params.rolename;
+    let rolename = req.params.rolename;
     res.json({error: false, 'rolename': rolename});
 })
 

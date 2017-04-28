@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var request = require('request');
+let express = require('express');
+let router = express.Router();
+let request = require('request');
 // var mongoose = require('mongoose');
 // var db;
 // if (process.env.VCAP_SERVICES) {

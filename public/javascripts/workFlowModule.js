@@ -36,6 +36,10 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 templateUrl: 'partials/applymodel.html',
                 controller: 'ActivesApplyModel'
             })
+            .when('/workFlowPerformanceROC', {
+                templateUrl: 'partials/performanceroc.html',
+                controller: 'ActivesPerformanceROC'
+            })
             // If invalid routes, just redirect to the main list view
             .otherwise({redirectTo: '/'});
     }])
@@ -55,27 +59,26 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
             workFlowActive.query({}, function (actives) {
                 $scope.actives = actives;
                 zNodes = JSON.parse(JSON.stringify(actives));
-                // for (key in zNodes) {
-                //     console.log(zNodes[key]);
-                // }
                 jsPlumb.ready(jsplumbinit);
             });
-
-            // $scope.active = workFlow.get({activeId: 223}, function (info) {
-            //     console.log('info:' + info);
-            // });
-            // console.log(JSON.stringify($scope.active));
         }
-        $scope.showaction = false;
         $scope.$watch('showaction', function (newValue, oldValue, scope) {
             console.log('newvalue ' + newValue);
             console.log('oldValue ' + oldValue);
         });
+        $scope.showaction = false;
         console.log('showaction  ' + $scope.showaction);
     }])
     .controller('ActivesReadCSV', ['$scope', '$rootScope', 'ParseFile', 'ReadCSV',
         function ($scope, $rootScope, ParseFile, ReadCSV) {
             $scope.$parent.showaction = true;
+            $scope.ColumnTypes = ['Numeric', 'Enum', 'Time', 'UUID', 'String', 'Invalid'];
+            if ($rootScope.column_names != undefined) {
+                $scope.column_names = $rootScope.column_names;
+            }
+            if ($rootScope.column_types != undefined) {
+                $scope.column_types = $rootScope.column_types;
+            }
             $scope.$watch('csvname', function (newValue, oldValue, scope) {
                 if (newValue.indexOf(".csv") >= 0) {
                     if (newValue == oldValue && $scope.hexname != undefined) {
@@ -92,10 +95,14 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                         } else {
                             $scope.column_names = undefined;
                             $scope.column_types = undefined;
+                            console.log($scope.column_names);
+                            console.log($scope.column_types);
                             $scope.iserror = true;
                             $scope.errormsg = resp.message;
                         }
                     });
+                    // $scope.column_names = ["EPC", "Time", "Rssi", "PhaseRadian", "label", "Velocity", "tag_readrate", "Frequency", "Rssi_mavg", "Rssi_median", "Rssi_mstd", "Phase_mavg", "Phase_mstd", "CFPR_sum", "CFPR_mstd", "CFPR_median", "Slide_Window", "freqChange"];
+                    // $scope.column_types = ["Enum", "String", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric"];
                 } else {
                     $scope.column_names = undefined;
                     $scope.column_types = undefined;
@@ -140,6 +147,7 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $rootScope.readcsv.headername = $scope.headername;
                 $rootScope.readcsv.useSingleQuotes = $scope.useSingleQuotes;
                 $rootScope.readcsv.deleteOnDone = $scope.deleteOnDone;
+                console.log($rootScope.column_types);
             }
             $scope.run = function () {
                 readcsvpost = {
@@ -148,6 +156,10 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     separator: $scope.separatorval,
                     useSingleQuotes: $scope.useSingleQuotes,
                     deleteOnDone: $scope.deleteOnDone ? 1 : 0
+                }
+                console.log($rootScope.column_types);
+                if ($rootScope.column_types != undefined) {
+                    readcsvpost.column_types = $rootScope.column_types;
                 }
                 var readcsv = new ReadCSV(readcsvpost);
                 readcsv.$save(function (resp) {
@@ -337,6 +349,7 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
         }])
     .controller('ActivesApplyModel', ['$scope', '$rootScope', 'ApplyModel',
         function ($scope, $rootScope, ApplyModel) {
+            $scope.$parent.showaction = true;
             "use strict";
             if ($rootScope.svm != undefined) {
                 $scope.modelid = $rootScope.svm.modelid;
@@ -349,14 +362,46 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
             }
             $scope.run = function () {
                 var modelinfo = {modelid: $scope.modelid, datain: $scope.datain};
+                // var modelinfo = {modelid: 'SVM_17711_3845_6376', datain: 'czc.hex_0.75'};
                 console.log(modelinfo);
                 var apply = new ApplyModel(modelinfo);
                 apply.$save(function (resp) {
                     if (!resp.error) {
-                        console.log(resp.message);
+                        // console.log(resp.message);
+                        $rootScope.applymodel = {};
+                        $rootScope.applymodel.scores = resp.message.thresholds_and_metric_scores;
+                        console.log($rootScope.applymodel.scores);
                     } else {
                         console.log('error ' + resp.message)
                     }
                 });
             }
-        }]);
+        }])
+    .controller('ActivesPerformanceROC', ['$scope', '$rootScope', function ($scope, $rootScope) {
+        "use strict";
+        $scope.$parent.showaction = true;
+        $rootScope.$watch('applymodel', function (newValue, oldValue, scope) {
+            if (newValue != undefined && newValue.scores != undefined) {
+                console.log(newValue.scores);
+                var x, y;
+                var columns = newValue.scores.columns;
+                for (var idx in columns) {
+                    if (columns[idx].name == 'fpr') {
+                        x = idx;
+                        console.log("find x");
+                    } else if (columns[idx].name == 'tpr') {
+                        y = idx;
+                        console.log("find y");
+                    }
+                }
+                var data = newValue.scores.data;
+                var xs = data[x];
+                var ys = data[y];
+                var plots = [];
+                for (let i = 0; i < xs.length; ++i) {
+                    plots.push([xs[i], ys[i]]);
+                }
+                drawPlots('performanceroc', plots);
+            }
+        });
+    }]);

@@ -17,10 +17,19 @@ class ImportFilesV3 {
         this.path = importfile.path;
         this.files = importfile.files;
         this.destination_frames = importfile.destination_frames;
+        this.column_types = undefined;
     }
 
     getDstFrames() {
         return this.destination_frames;
+    }
+
+    getColumnTypes() {
+        return this.column_types;
+    }
+
+    setColumnTypes(column_types) {
+        this.column_types = column_types;
     }
 }
 

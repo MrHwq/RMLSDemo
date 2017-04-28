@@ -104,6 +104,10 @@ class ParseSetupV3 {
     getColumnTypes() {
         return this.column_types;
     }
+
+    setColumnTypes(column_types) {
+        this.column_types = column_types;
+    }
 }
 
 module.exports = ParseSetupV3;

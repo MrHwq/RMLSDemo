@@ -14,7 +14,7 @@
  */
 class H2OErrorV3 {
     constructor(h2oerror) {
-        var meta = h2oerror.__meta;
+        let meta = h2oerror.__meta;
         if (meta.schema_name != 'H2OErrorV3') {
             console.error(h2oerror);
         }

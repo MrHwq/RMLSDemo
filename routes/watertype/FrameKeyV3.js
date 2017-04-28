@@ -9,7 +9,7 @@
  */
 class FrameKeyV3 {
     constructor(frame) {
-        var meta = frame.__meta;
+        let meta = frame.__meta;
         if (meta.schema_name != 'FrameKeyV3') {
             console.error(frame);
         }

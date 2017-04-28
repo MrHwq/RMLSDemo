@@ -48,7 +48,7 @@
  *  rows:0
  *  }
  */
-var JobV3 = require('./JobV3');
+let JobV3 = require('./JobV3');
 class ParseV3 {
     constructor(parse) {
         this.job = new JobV3(parse.job);

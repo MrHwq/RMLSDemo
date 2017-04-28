@@ -40,4 +40,5 @@ div(ng-controller='ActivesReadCSV')
         tbody
             tr(ng-repeat="x in column_names")
                 th {{column_names[$index]}}
-                td {{column_types[$index]}}
+                td
+                    select(ng-model="column_types[$index]", ng-options="x for x in ColumnTypes")
