@@ -1,6 +1,17 @@
 /**
  * Created by weiqiang on 2017/4/27.
  */
+/*
+ *{__meta:{schema_version:3,schema_name:TwoDimTableV3,schema_type:TwoDimTable},
+ *    name:Metrics for Thresholds,
+ *    description:Binomial metrics as a function of classification thresholds,
+ *    columns:[
+ *    ColumnSpecsBase...
+ *    ],
+ *    rowcount:60,
+ *    data:[[]....]
+ *}
+ */
 let ColumnSpecsBase = require("./ColumnSpecsBase");
 
 class TwoDimTableV3 {

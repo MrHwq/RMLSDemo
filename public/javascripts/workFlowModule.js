@@ -16,32 +16,32 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 template: '',
                 controller: 'ActivesCtrl'
             })
-            .when('/workFlowReadCSV', {
+            .when('/workFlowReadCSV/:id', {
                 templateUrl: 'partials/readrcv.html',
                 controller: 'ActivesReadCSV'
             })
-            .when('/workFlowSetRole', {
+            .when('/workFlowSetRole/:id', {
                 templateUrl: 'partials/setrole.html',
                 controller: 'ActivesSetRole'
             })
-            .when('/workFlowSplitDataByPercent', {
+            .when('/workFlowSplitDataByPercent/:id', {
                 templateUrl: 'partials/splitdatabypercent.html',
                 controller: 'ActivesSplitByPercent'
             })
-            .when('/workFlowSVM(SupportVectorMachine)', {
+            .when('/workFlowSVM(SupportVectorMachine)/:id', {
                 templateUrl: 'partials/svm.html',
                 controller: 'ActivesSVM'
             })
-            .when('/workFlowApplyModel', {
+            .when('/workFlowApplyModel/:id', {
                 templateUrl: 'partials/applymodel.html',
                 controller: 'ActivesApplyModel'
             })
-            .when('/workFlowPerformanceROC', {
+            .when('/workFlowPerformanceROC/:id', {
                 templateUrl: 'partials/performanceroc.html',
                 controller: 'ActivesPerformanceROC'
-            })
-            // If invalid routes, just redirect to the main list view
-            .otherwise({redirectTo: '/'});
+            });
+        // If invalid routes, just redirect to the main list view
+        // .otherwise({redirectTo: '/'});
     }])
     .run(['$rootScope', '$location', function ($rootScope, $location) {
         // 模糊匹配路径
@@ -69,8 +69,9 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
         $scope.showaction = false;
         console.log('showaction  ' + $scope.showaction);
     }])
-    .controller('ActivesReadCSV', ['$scope', '$rootScope', 'ParseFile', 'ReadCSV',
-        function ($scope, $rootScope, ParseFile, ReadCSV) {
+    .controller('ActivesReadCSV', ['$scope', '$rootScope', '$routeParams', 'ParseFile', 'ReadCSV',
+        function ($scope, $rootScope, $routeParams, ParseFile, ReadCSV) {
+            var id = $routeParams[id];
             $scope.$parent.showaction = true;
             $scope.ColumnTypes = ['Numeric', 'Enum', 'Time', 'UUID', 'String', 'Invalid'];
             if ($rootScope.column_names != undefined) {
@@ -87,22 +88,18 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     }
                     lastidx = newValue.lastIndexOf('/');
                     $scope.hexname = newValue.substring(lastidx + 1).replace('.csv', '.hex');
-                    ParseFile.get({csvname: newValue}, function (resp) {
-                        if (!resp.error) {
-                            $scope.column_names = resp.message['column_names'];
-                            $scope.column_types = resp.message['column_types'];
-                            $scope.iserror = false;
-                        } else {
-                            $scope.column_names = undefined;
-                            $scope.column_types = undefined;
-                            console.log($scope.column_names);
-                            console.log($scope.column_types);
-                            $scope.iserror = true;
-                            $scope.errormsg = resp.message;
-                        }
+                    req = ParseFile.get({csvname: newValue}, function (resp) {
+                        let ret = new ParseFileRet(resp);
+                        $scope.column_names = ret.getColumnNames();
+                        $scope.column_types = ret.getColumnTypes();
+                        $scope.iserror = false;
+                    }, function (fail) {
+                        let ret = new ErrorRet(fail);
+                        $scope.column_names = undefined;
+                        $scope.column_types = undefined;
+                        $scope.iserror = true;
+                        $scope.errormsg = ret.toString();
                     });
-                    // $scope.column_names = ["EPC", "Time", "Rssi", "PhaseRadian", "label", "Velocity", "tag_readrate", "Frequency", "Rssi_mavg", "Rssi_median", "Rssi_mstd", "Phase_mavg", "Phase_mstd", "CFPR_sum", "CFPR_mstd", "CFPR_median", "Slide_Window", "freqChange"];
-                    // $scope.column_types = ["Enum", "String", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric", "Numeric"];
                 } else {
                     $scope.column_names = undefined;
                     $scope.column_types = undefined;
@@ -139,7 +136,6 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
             $scope.save = function () {
                 $rootScope.column_names = $scope.column_names;
                 $rootScope.column_types = $scope.column_types;
-                $rootScope.column_types[26] = 'Enum';
                 $rootScope.readcsv = {};
                 $rootScope.readcsv.csvname = $scope.csvname;
                 $rootScope.readcsv.hexname = $scope.hexname;
@@ -157,18 +153,13 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     useSingleQuotes: $scope.useSingleQuotes,
                     deleteOnDone: $scope.deleteOnDone ? 1 : 0
                 }
-                console.log($rootScope.column_types);
                 if ($rootScope.column_types != undefined) {
                     readcsvpost.column_types = $rootScope.column_types;
                 }
-                var readcsv = new ReadCSV(readcsvpost);
+                let readcsv = new ReadCSV(readcsvpost);
                 readcsv.$save(function (resp) {
-                    console.log(resp);
-                    if (!resp.error) {
-                        alert('message::' + resp['message']);
-                    } else {
-                        alert('readcsv post failed, error msg:' + resp.message);
-                    }
+                    let ret = new ReadCsvRet(resp);
+                    alert('message::' + ret.getJob());
                 }, function (fail) {
                     alert('readcsv post failed, ' + fail);
                 });
@@ -238,16 +229,12 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     seed: $scope.seed
                 }
                 console.log(percentinfo);
-                var percentinfo = new SplitByPercent(percentinfo);
-                percentinfo.$save(function (resp) {
-                    if (!resp.error) {
-                        message = resp['message'];
-                        for (key in message) {
-                            console.log(message[key]);
-                        }
-                    } else {
-                        alert('splitbydata post failed, ' + resp.message);
-                    }
+                var split = new SplitByPercent(percentinfo);
+                split.$save(function (resp) {
+                    ret = new SplitDataByPercentRet(resp);
+                    console.log(ret.getAst());
+                }, function (fail) {
+                    alert('splitbydata post failed, ' + fail);
                 });
             }
         }])
@@ -275,9 +262,7 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 $scope.gradient = $rootScope.svm.gradient;
                 $scope.missingvalueshandling = $rootScope.svm.missingvalueshandling;
             } else {
-                $scope.modelid = 'SVM_' + Math.floor(Math.random() * 100000)
-                    + '_' + Math.floor(Math.random() * 100000)
-                    + '_' + Math.floor(Math.random() * 100000);
+                $scope.modelid = `SVM_${Math.floor(Math.random() * 100000)}_${Math.floor(Math.random() * 100000)}_${Math.floor(Math.random() * 100000)}`;
                 $scope.nfolds = 0;
                 $scope.ignoreconstcols = true;
                 $scope.addintercept = false;
@@ -339,11 +324,10 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 console.log(svminfo);
                 var svm = new SVM(svminfo);
                 svm.$save(function (resp) {
-                    if (!resp.error) {
-                        console.log(resp.message);
-                    } else {
-                        console.log('error ' + resp.message)
-                    }
+                    let ret = new SVMRet(resp);
+                    console.log(ret.getJob());
+                }, function (fail) {
+                    console.log(fail);
                 });
             }
         }])
@@ -366,20 +350,20 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                 console.log(modelinfo);
                 var apply = new ApplyModel(modelinfo);
                 apply.$save(function (resp) {
-                    if (!resp.error) {
-                        // console.log(resp.message);
-                        $rootScope.applymodel = {};
-                        $rootScope.applymodel.scores = resp.message.thresholds_and_metric_scores;
-                        console.log($rootScope.applymodel.scores);
-                    } else {
-                        console.log('error ' + resp.message)
-                    }
+                    var applyret = new ApplyModelRet(resp);
+                    // console.log(resp.message);
+                    $rootScope.applymodel = {};
+                    $rootScope.applymodel.scores = resp.message.thresholds_and_metric_scores;
+                    console.log($rootScope.applymodel.scores);
+                }, function (fail) {
+                    console.log(fail);
                 });
             }
         }])
     .controller('ActivesPerformanceROC', ['$scope', '$rootScope', function ($scope, $rootScope) {
         "use strict";
         $scope.$parent.showaction = true;
+        $scope.rocShow = true;
         $rootScope.$watch('applymodel', function (newValue, oldValue, scope) {
             if (newValue != undefined && newValue.scores != undefined) {
                 console.log(newValue.scores);
@@ -402,6 +386,9 @@ angular.module('workFlowModule', ['ngRoute', 'workFlowService', 'workFlowActions
                     plots.push([xs[i], ys[i]]);
                 }
                 drawPlots('performanceroc', plots);
+                $scope.rocShow = true;
+            } else {
+                $scope.rocShow = false;
             }
         });
     }]);

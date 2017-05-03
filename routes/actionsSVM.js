@@ -7,6 +7,8 @@ let router = express.Router();
 let request = require('request');
 let SVMV3 = require('./watertype/SVMV3');
 let H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
+let errorFunc = require('./actionError');
+let svmret = require('../public/javascripts/ret/SVMRet.js');
 
 mainurl = 'http://172.21.127.123:54323';
 let buildModel = function (formData, res) {
@@ -18,23 +20,15 @@ let buildModel = function (formData, res) {
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                svm = new SVMV3(JSON.parse(body));
-                job = svm.getJob();
-                res.json({
-                    error: false,
-                    message: {
-                        jobname: job.getJobName(),
-                        jobstatus: job.getJobStatus(),
-                        joburl: job.getJobUrl()
-                    }
-                });
-            } else if (body != undefined) {
-                h2oerror = new H2OErrorV3(JSON.parse(body));
-                console.log(body);
-                res.json({error: true, "message": `request svm failed, ${h2oerror.getStackTrace()}`});
-            } else {
-                res.json({error: true, "message": `request svm failed, ${response}`});
+                let svm = new SVMV3(JSON.parse(body));
+                let job = svm.getJob();
+                let ret = new svmret();
+                ret.setJob(job.getJobName());
+                res.json(ret);
+                return;
             }
+            errorFunc(`request svm failed, ${error}, code:${response != undefined ? response.statusCode : 0}`,
+                body, res);
         }
     );
 }
@@ -83,14 +77,14 @@ router.post("/", function (req, res, next) {
                     'missing_values_handling': params.missing_values_handling
                 }
                 buildModel(buildModelInfo, res);
-            } else if (body != undefined) {
-                h2oerror = new H2OErrorV3(JSON.parse(body));
-                res.json({error: true, "message": `request svm register failed, ${h2oerror.getMsg()}`});
-            } else {
-                res.json({error: true, "message": `request svm register failed, ${response}`});
+                return;
             }
+
+            errorFunc(`request svm register failed, ${error}, code:${response != undefined ? response.statusCode : 0}`,
+                body, res);
         }
     );
 })
+
 
 module.exports = router;

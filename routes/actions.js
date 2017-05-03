@@ -3,20 +3,20 @@
  */
 let express = require('express');
 let router = express.Router();
-let parsefile = require('./actionsParseFile');
-let readcsv = require('./actionsReadCSV');
+let parseFile = require('./actionsParseFile');
+let readCsv = require('./actionsReadCSV');
 let jobs = require('./actionsJobs');
-let setrole = require('./actionsSetRole');
-let splitdatabypercent = require('./actionsSplitDataByPercent');
+let setRole = require('./actionsSetRole');
+let splitDataByPercent = require('./actionsSplitDataByPercent');
 let svm = require('./actionsSVM');
-let applymodel = require('./actionsApplyModel');
+let applyModel = require('./actionsApplyModel');
 
-router.use('/parsefile', parsefile);
-router.use('/readcsv', readcsv);
+router.use('/parsefile', parseFile);
+router.use('/readcsv', readCsv);
 router.use('/jobs', jobs);
-router.use('/setrole', setrole);
-router.use('/splitdatabypercent', splitdatabypercent);
+router.use('/setrole', setRole);
+router.use('/splitdatabypercent', splitDataByPercent);
 router.use('/svm', svm);
-router.use('/applymodel', applymodel);
+router.use('/applymodel', applyModel);
 
 module.exports = router;

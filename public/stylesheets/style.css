@@ -1,87 +1,115 @@
 body {
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 a {
-    color: #00B7FF;
-}
+  color: #00B7FF; }
 
 .App__container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    position: absolute;
-    width: 100%;
-    bottom: 55px;
-    top: 41px;
-}
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  width: 100%;
+  bottom: 55px;
+  top: 41px;
+  min-width: 700px; }
+
+.App__workspace {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  width: 100%;
+  bottom: 15px;
+  top: 11px;
+  min-width: 700px; }
 
 .container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    position: absolute;
-    width: 200px;
-    float: right;
-    bottom: 55px;
-    top: 41px;
-    border: 1px;
-}
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  width: 200px;
+  float: right;
+  bottom: 55px;
+  top: 41px;
+  border: 1px; }
 
 .Flow_plumb {
-    background: #FFF0F0;
-    width: 100%;
-    height: 100%;
-}
+  background: #FFF0F0;
+  width: 100%;
+  height: 100%; }
 
 .Repository__container {
-    width: 100%;
-    max-width: 260px;
-    min-width: 260px;
-    border-right: 1px solid #cdd6df;
-    -webkit-transition: width .2s linear;
-    transition: width .2s linear;
-}
+  width: 100%;
+  max-width: 260px;
+  min-width: 260px;
+  border-right: 1px solid #cdd6df;
+  -webkit-transition: width .2s linear;
+  transition: width .2s linear; }
 
 .Canvas__container {
-    margin-top: -0px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
+  margin-top: -0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
 
 .TabControl__item {
-    display: none;
-    min-width: 500px;
-    width: 100%;
-    height: 100%;
-    box-shadow: #797979 3px 0 5px;
-}
+  display: none;
+  min-width: 700px;
+  min-height: 650px;
+  width: 100%;
+  height: 100%;
+  box-shadow: #797979 3px 0 5px; }
 
 .TabControl__active {
-    display: block;
-}
+  display: block; }
 
 .OperatorInfo__container {
-    position: fixed;
-    top: 41px;
-    right: 0;
-    bottom: 60px;
-    width: 400px;
-    overflow-y: auto;
-    border-left: 1px solid #c9d1d9;
-    background-color: #fafbfc;
-    padding: 20px;
-    -webkit-transition-property: width, opacity;
-    transition-property: width, opacity;
-    -webkit-transition-duration: .2s;
-    transition-duration: .2s;
-    opacity: .9;
-}
+  position: fixed;
+  top: 41px;
+  right: 0;
+  bottom: 60px;
+  width: 400px;
+  overflow-y: auto;
+  border-left: 1px solid #c9d1d9;
+  background-color: #fafbfc;
+  padding: 20px;
+  -webkit-transition-property: width, opacity;
+  transition-property: width, opacity;
+  -webkit-transition-duration: .2s;
+  transition-duration: .2s;
+  opacity: .9; }
 
 .Console__container {
-    margin-top: -40px;
-    width: 100%;
-    overflow: hidden;
-}
+  position: fixed;
+  border-top: 1px solid #cdd6df;
+  bottom: 0;
+  background-color: #fff;
+  width: 100%; }
+
+.Console__navs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #3c454f; }
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.fa-eye:before {
+  content: "\F06E"; }
+
+/*# sourceMappingURL=style.css.map */

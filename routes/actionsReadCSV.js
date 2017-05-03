@@ -8,13 +8,16 @@ let ImportFiles = require('./watertype/ImportFilesV3');
 let ParseV3 = require('./watertype/ParseV3');
 let ParseSetupV3 = require('./watertype/ParseSetupV3');
 let H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
+let errorFunc = require('./actionError');
+let ReadCsvRet = require('../public/javascripts/ret/ReadCsvRet.js');
+let ErrorRet = require('../public/javascripts/ret/ErrorRet.js');
 // var Rx = require('rx');
 // const rxJs = new Rx.Subject();
 
 mainurl = 'http://172.21.127.123:54323';
 function parseFunc(parseSetup, res) {
     let parseUrl = `${mainurl}/3/Parse`;
-    let formdata = {
+    let formData = {
         'destination_frame': parseSetup.getDstFrame(),
         'source_frames': `["${parseSetup.getSrcFramesName()}"]`,
         'parse_type': parseSetup.getParseType(),
@@ -30,18 +33,17 @@ function parseFunc(parseSetup, res) {
     console.log(`continue to parse ${parseUrl}`);
     request.post({
             url: parseUrl,
-            form: formdata
+            form: formData
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                parseRet = new ParseV3(JSON.parse(body));
-                res.json({error: false, message: parseRet.getJob().getJobName()});
-            } else if (body != undefined) {
-                h2oerror = new H2OErrorV3(JSON.parse(body));
-                res.json({error: true, "message": `request parse failed, ${h2oerror.getMsg()}`});
-            } else {
-                res.json({error: true, "message": `request parse failed, ${response}`});
+                let parseRet = new ParseV3(JSON.parse(body));
+                let ret = new ReadCsvRet();
+                ret.setJob(parseRet.getJob().getJobName());
+                res.json(ret);
+                return;
             }
+            errorFunc(`request parse failed, ${error}, code:${response != undefined ? response.statusCode : 0}`, body, res);
         }
     );
 }
@@ -58,17 +60,15 @@ function parseSetup(importFiles, res) {
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                parseresult = new ParseSetupV3(JSON.parse(body));
+                let parseResult = new ParseSetupV3(JSON.parse(body));
                 if (importFiles.getColumnTypes() != undefined) {
-                    parseresult.setColumnTypes(importFiles.getColumnTypes());
+                    parseResult.setColumnTypes(importFiles.getColumnTypes());
                 }
-                parseFunc(parseresult, res);
-            } else if (body != undefined) {
-                h2oerror = new H2OErrorV3(JSON.parse(body));
-                res.json({error: true, "message": `parse setup failed, ${h2oerror.getMsg()}`});
-            } else {
-                res.json({error: true, "message": `parse setup failed, ${response}`});
+                parseFunc(parseResult, res);
+                return;
             }
+            errorFunc(`request parse setup failed, ${error}, code:${response != undefined ? response.statusCode : 0}`,
+                body, res);
         }
     );
 }
@@ -76,21 +76,17 @@ function parseSetup(importFiles, res) {
 router.post("/", function (req, res, next) {
     let reqbody = req.body;
     let importFilesUrl = `${mainurl}/3/ImportFiles?path=${reqbody.csvname}`;
-    console.log(`continue to import file ${importFilesUrl}`);
-    console.log(req.body);
+    console.log(`continue to import file ${importFilesUrl} ${reqbody.column_types}`);
     request(importFilesUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            importFiles = new ImportFiles(JSON.parse(body));
+            let importFiles = new ImportFiles(JSON.parse(body));
             if (reqbody.column_types != undefined) {
                 importFiles.setColumnTypes(reqbody.column_types);
             }
             parseSetup(importFiles, res);
-        } else if (body != undefined) {
-            h2oerror = new H2OErrorV3(JSON.parse(body));
-            res.json({error: true, "message": `request import file failed, ${h2oerror.getMsg()}`});
-        } else {
-            res.json({error: true, "message": `request import file failed, ${response}`});
+            return;
         }
+        errorFunc(`request import file failed, ${error}, code:${response != undefined ? response.statusCode : 0}`, body, res);
     });
 });
 

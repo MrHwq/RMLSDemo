@@ -8,12 +8,27 @@ block content
     link(rel="stylesheet", href="/stylesheets/style.css")
     body(ng-app="workFlowModule", ng-controller="ActivesCtrl")
         div.App__container
-            div.Repository__container
-                div#treeboxbox_tree.ztree
-            div.TabControl__item.TabControl__active
-                div#flow-panel.Flow_plumb
+            div.App__workspace
+                div.Repository__container
+                    div#treeboxbox_tree.ztree
+                div.TabControl__item.TabControl__active
+                    div#flow-panel.Flow_plumb
+            div.OperatorInfo__container(ng-view, ng-show="showaction")
+            div.Console__container
+                div.Console__navs
+                    div(title="运行结果")
+                        i.fa
+                            label 运行结果
+                    div(title="运行")
+                        i.fa.fa-eye
+                            label 运行
+                    div(title="保存")
+                        i.fa.fa-eye
+                            label 保存
         //div.OperatorInfo__container
-        div.OperatorInfo__container(ng-view, ng-show="showaction")
+
+
+
     //()
     //nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
     //    div.navbar-header
@@ -80,3 +95,9 @@ block content
     script(src="/javascripts/workFlowModule.js")
     script(src="/javascripts/workFlowService.js")
     script(src="/javascripts/workFlowActionsService.js")
+    script(src="/javascripts/ret/ErrorRet.js")
+    script(src="/javascripts/ret/ParseFileRet.js")
+    script(src="/javascripts/ret/ReadCsvRet.js")
+    script(src="/javascripts/ret/SplitDataByPercentRet.js")
+    script(src="/javascripts/ret/SVMRet.js")
+    script(src="/javascripts/ret/ApplyModelRet.js")

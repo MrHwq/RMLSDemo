@@ -7,11 +7,14 @@ let request = require('request');
 let ImportFiles = require('./watertype/ImportFilesV3');
 let ParseSetupV3 = require('./watertype/ParseSetupV3');
 let H2OErrorV3 = require('./watertype/errortype/H2OErrorV3');
+let ParseFileRet = require('../public/javascripts/ret/ParseFileRet.js');
+let ErrorRet = require('../public/javascripts/ret/ErrorRet.js');
+let errorFunc = require('./actionError');
 
 mainurl = 'http://172.21.127.123:54323';
 
 function parseSetup(importFiles, res) {
-    let parseSetupUrl = mainurl + '/3/ParseSetup';
+    let parseSetupUrl = `${mainurl}/3/ParseSetup`;
     let formData = {
         'source_frames': JSON.stringify(importFiles.getDstFrames())
     };
@@ -23,35 +26,31 @@ function parseSetup(importFiles, res) {
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 parse = new ParseSetupV3(JSON.parse(body));
-                res.json({
-                    error: false,
-                    message: {
-                        column_names: parse.getColumnNames(),
-                        column_types: parse.getColumnTypes()
-                    }
-                });
-            } else {
-                error = new H2OErrorV3(JSON.parse(body));
-                res.json({error: true, "message": "request split data failed, " + error.getMsg()});
+                let ret = new ParseFileRet();
+                ret.setColumnNames(parse.getColumnNames());
+                ret.setColumnTypes(parse.getColumnTypes());
+                res.json(ret);
+                return;
             }
+            errorFunc(`request parse setup failed, ${error}, code:${response != undefined ? response.statusCode : 0}`,
+                body, res);
         }
     );
 }
 
 router.get("/:csvname", function (req, res, next) {
-    let importFilesUrl = mainurl + "/3/ImportFiles?path=" + req.params.csvname;
-    console.log("continue to import file " + importFilesUrl);
+    let importFilesUrl = `${mainurl}/3/ImportFiles?path=${req.params.csvname}`;
+    console.log(`continue to import file ${importFilesUrl}`);
     request(importFilesUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            importFiles = new ImportFiles(JSON.parse(body));
+            let importFiles = new ImportFiles(JSON.parse(body));
             parseSetup(importFiles, res);
-        } else if (body != undefined) {
-            h2oerror = new H2OErrorV3(JSON.parse(body));
-            res.json({error: true, "message": "request import file failed, " + h2oerror.getMsg()});
-        } else {
-            res.json({error: true, "message": "request import file failed, " + response});
+            return;
         }
+        errorFunc(`request import file failed, ${error}, code:${response != undefined ? response.statusCode : 0}`,
+            body, res);
     });
 });
+
 
 module.exports = router;

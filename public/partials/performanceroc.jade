@@ -1,4 +1,5 @@
 //
    Created by weiqiang on 2017/4/28.
 div.Flow_plumb(ng-controller='ActivesPerformanceROC')
-    div#performanceroc.Flow_plumb
+    p(ng-show='rocShow') have no data to show
+    div#performanceroc.Flow_plumb(ng-show='!rocShow')

@@ -1,14 +1,14 @@
-.paramscontainer .paramsitem {
+paramscontainer .paramsitem {
   margin-bottom: 10px; }
-  .paramscontainer .paramsitem .paramstitle {
+  paramscontainer .paramsitem .paramstitle {
     margin: 5px 0;
     color: #313131; }
-  .paramscontainer .paramsitem .paramscontent {
+  paramscontainer .paramsitem .paramscontent {
     margin-left: 5px; }
-.paramscontainer .paramsnoparams {
+paramscontainer .paramsnoparams {
   margin-top: 5px;
   font-size: .9em; }
-.paramscontainer .paramsrequired {
+paramscontainer .paramsrequired {
   color: #ff0000;
   margin-right: 3px; }
 

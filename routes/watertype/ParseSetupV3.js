@@ -47,18 +47,6 @@ class ParseSetupV3 {
         this.chunk_size = parse.chunk_size;
         this.column_names = parse.column_names;
         this.column_types = parse.column_types;
-
-        // console.log(JSON.stringify(parse['column_names']));
-        // console.log(JSON.stringify(parse.column_types));
-        // for (var key in parse.column_names) {
-        //     this.column_names += '"' + parse['column_names'][key] + '",';
-        // }
-        // this.column_names += ']';
-        // this.column_types = '[';
-        // for (var key in parse.column_types) {
-        //     this.column_types += '"' + parse['column_types'][key] + '",';
-        // }
-        // this.column_types += ']';
     }
 
     getDstFrame() {

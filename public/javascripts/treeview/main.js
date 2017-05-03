@@ -27,9 +27,8 @@ function addNode(parentId, nodeId, nodeLabel, position) {
         .attr('id', nodeId)
         .classed('node', true)
         .on('dblclick', function () {
-            console.log("#/workFlow" + nodeLabel.replace(/\s/g, ""));
             curPath = window.location.href;
-            newPath = "#/workFlow" + nodeLabel.replace(/\s/g, "");
+            newPath = "#/workFlow" + nodeLabel.replace(/\s/g, "") + "/" + nodeId;
             if (curPath.indexOf(newPath) >= 0) {
                 window.location.href = '#/';
             } else {
